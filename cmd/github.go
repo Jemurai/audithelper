@@ -4,6 +4,7 @@ package cmd
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/google/go-github/github"
@@ -27,6 +28,7 @@ var githubCmd = &cobra.Command{
 
 		client := getGithubClient(githubToken)
 		if org != "" {
+			getOrgUsers(org, client)
 			getOrgRepos(org, client)
 			getOrgUserRepos(org, client)
 		}
@@ -46,7 +48,7 @@ func getUserRepos(user string, client *github.Client) {
 		fmt.Println(err)
 	}
 	for i := 0; i < len(repos); i++ {
-		printRepo(*repos[i])
+		visitRepo(*repos[i])
 	}
 }
 
@@ -61,7 +63,7 @@ func getOrgRepos(org string, client *github.Client) {
 		fmt.Println(err)
 	}
 	for i := 0; i < len(repos); i++ {
-		printRepo(*repos[i])
+		visitRepo(*repos[i])
 	}
 }
 
@@ -81,8 +83,47 @@ func getOrgUserRepos(org string, client *github.Client) {
 	}
 }
 
-func printRepo(repo github.Repository) {
-	fmt.Println(*repo.Name, "\t\t\t", *repo.Private, "\t\t\t", *repo.UpdatedAt)
+func getOrgUsers(org string, client *github.Client) {
+	fmt.Println("Getting", org, " users:")
+	opt := &github.ListMembersOptions{}
+	ctx := context.Background()
+	users, _, err := client.Organizations.ListMembers(ctx, org, opt)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Handling", len(users), " users from ", org)
+	for j := 0; j < len(users); j++ {
+		visitGithubUser(*users[j])
+	}
+}
+
+func visitGithubUser(user github.User) {
+	m := map[string]interface{}{
+		"login": *user.Login,
+		"url":   *user.URL,
+	}
+	b, err := json.MarshalIndent(m, "", " ")
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	fmt.Print(string(b))
+	//	fmt.Println(*repo.Name, "\t\t\t", *repo.Private, "\t", *repo.UpdatedAt, "\t", *repo.CloneURL)
+}
+
+func visitRepo(repo github.Repository) {
+	m := map[string]interface{}{"name": *repo.Name,
+		"url":     *repo.CloneURL,
+		"owner":   *repo.Owner.Login,
+		"update":  *repo.UpdatedAt,
+		"create":  *repo.CreatedAt,
+		"private": *repo.Private,
+	}
+	b, err := json.MarshalIndent(m, "", " ")
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	fmt.Print(string(b))
+	//	fmt.Println(*repo.Name, "\t\t\t", *repo.Private, "\t", *repo.UpdatedAt, "\t", *repo.CloneURL)
 }
 
 func init() {

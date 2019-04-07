@@ -48,3 +48,13 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-role.html
 What gaa does with AWS is:
 
 1. List users and basic information to be able to see change over time.
+
+
+## Google Apps
+
+### Access
+
+Based on [these instructions](https://developers.google.com/admin-sdk/directory/v1/quickstart/go) we need to:
+
+1. Create client credentials:  click on enable Directory API, then Download Client Configuration and place that in a file in the directory you plan to run gaa from.
+2. When running gaa, click through the web prompt to allow google to issue you an OAuth2 token.

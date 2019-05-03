@@ -52,7 +52,7 @@ var googleappsCmd = &cobra.Command{
 		} else {
 			fmt.Print("Users:\n")
 			for _, u := range r.Users {
-				fmt.Printf("%s (%s) Admin? %v Last Login: %v\n", u.PrimaryEmail, u.Name.FullName, u.IsAdmin, u.LastLoginTime)
+				fmt.Printf("%s (%s) Admin? %v Suspended? %v Last Login: %v\n", u.PrimaryEmail, u.Name.FullName, u.IsAdmin, u.Suspended, u.LastLoginTime)
 			}
 		}
 	},

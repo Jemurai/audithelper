@@ -49,11 +49,24 @@ var googleappsCmd = &cobra.Command{
 		}
 
 		if len(r.Users) == 0 {
-			fmt.Print("No users found.\n")
+			log.Debugln("No users found.")
 		} else {
-			fmt.Print("Users:\n")
+			log.Debugln("Users:")
 			for _, u := range r.Users {
-				fmt.Printf("%s (%s) Admin? %v Suspended? %v Last Login: %v\n", u.PrimaryEmail, u.Name.FullName, u.IsAdmin, u.Suspended, u.LastLoginTime)
+				m := map[string]interface{}{
+					"email":     u.PrimaryEmail,
+					"name":      u.Name.FullName,
+					"lastLogin": u.LastLoginTime,
+					"admin":     u.IsAdmin,
+					"suspended": u.Suspended,
+				}
+				b, err := json.MarshalIndent(m, "", " ")
+				if err != nil {
+					log.Error("error:", err)
+				}
+				fmt.Print(string(b))
+
+				// fmt.Printf("%s (%s) Admin? %v Suspended? %v Last Login: %v\n", u.PrimaryEmail, u.Name.FullName, u.IsAdmin, u.Suspended, u.LastLoginTime)
 			}
 		}
 	},

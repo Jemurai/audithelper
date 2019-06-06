@@ -1,16 +1,18 @@
-// Copyright © 2019 Matt Konda <mkonda@Jemurai.com>
-//
+//Package cmd
+
 package cmd
 
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/spf13/viper"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/iam"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -23,10 +25,10 @@ var awsCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		sess, err := session.NewSession(&aws.Config{})
 		if err != nil {
-			fmt.Println("Got error creating session:")
-			fmt.Println(err.Error())
+			log.Debug("Got error creating session:")
+			log.Error(err.Error())
 		}
-		fmt.Println(viper.GetString("AWS_REGION"))
+		log.Debug(viper.GetString("AWS_REGION"))
 		checkUsers(sess)
 	},
 }
@@ -37,7 +39,7 @@ func checkUsers(sess *session.Session) {
 		MaxItems: aws.Int64(100),
 	})
 	if err != nil {
-		fmt.Println("Error", err)
+		log.Error("Error", err)
 		return
 	}
 	for i, user := range result.Users {
@@ -49,7 +51,7 @@ func checkUsers(sess *session.Session) {
 			UserName: user.UserName,
 		})
 		if err != nil {
-			fmt.Println("Error", err)
+			log.Error("Error", err)
 			return
 		}
 		visitAWSKeys(keys.AccessKeyMetadata)
@@ -69,14 +71,30 @@ func visitAWSKeys(keys []*iam.AccessKeyMetadata) {
 		}
 		b, err := json.MarshalIndent(m, "", " ")
 		if err != nil {
-			fmt.Println("error:", err)
+			log.Error("error:", err)
 		}
 		fmt.Print(string(b))
 	}
 }
 
 func visitIAMUser(i int, user *iam.User) {
-	fmt.Printf("%d user %s created %v and pass last used %v\n", i, *user.UserName, user.CreateDate, user.PasswordLastUsed)
+	t := time.Time{}
+	if user.PasswordLastUsed != nil {
+		log.Debugf("Time is not zero")
+		t = *user.PasswordLastUsed
+	}
+
+	m := map[string]interface{}{
+		"user":             *user.UserName,
+		"createdAt":        *user.CreateDate,
+		"passwordLastUsed": t,
+	}
+	b, err := json.MarshalIndent(m, "", " ")
+	if err != nil {
+		log.Error("error:", err)
+	}
+	fmt.Print(string(b))
+	//	fmt.Printf("%d user %s created %v and pass last used %v\n", i, *user.UserName, user.CreateDate, user.PasswordLastUsed)
 }
 
 func init() {

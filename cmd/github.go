@@ -1,5 +1,5 @@
-// Copyright © 2019 Matt Konda <mkonda@jemurai.com>
-//
+// Package cmd
+
 package cmd
 
 import (
@@ -12,6 +12,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // githubCmd represents the github command
@@ -24,7 +26,7 @@ var githubCmd = &cobra.Command{
 		org := viper.GetString("github-org")
 		user := viper.GetString("github-user")
 		githubToken := viper.GetString("github-token")
-		fmt.Println("github called with", org, " and ", user, " and ", public)
+		log.Debug("github called with", org, " and ", user, " and ", public)
 
 		client := getGithubClient(githubToken)
 		if org != "" {
@@ -39,8 +41,7 @@ var githubCmd = &cobra.Command{
 }
 
 func getUserRepos(user string, client *github.Client) {
-	fmt.Println("----------------------------------------------------------------")
-	fmt.Println("Getting", user, " repositories:")
+	log.Debug("Getting", user, " repositories:")
 	opt := &github.RepositoryListOptions{}
 	ctx := context.Background()
 	repos, _, err := client.Repositories.List(ctx, user, opt)
@@ -53,8 +54,7 @@ func getUserRepos(user string, client *github.Client) {
 }
 
 func getOrgRepos(org string, client *github.Client) {
-	fmt.Println("----------------------------------------------------------------")
-	fmt.Println("Getting", org, " repositories:")
+	log.Debug("Getting", org, " repositories:")
 	//	opt := &github.RepositoryListByOrgOptions{Type: "public"}
 	opt := &github.RepositoryListByOrgOptions{}
 	ctx := context.Background()
@@ -68,30 +68,29 @@ func getOrgRepos(org string, client *github.Client) {
 }
 
 func getOrgUserRepos(org string, client *github.Client) {
-	fmt.Println("Getting", org, " user repositories:")
+	log.Debug("Getting", org, " user repositories:")
 	opt := &github.ListMembersOptions{}
 	ctx := context.Background()
 	users, _, err := client.Organizations.ListMembers(ctx, org, opt)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("Handling", len(users), " users from ", org)
+	log.Debug("Handling", len(users), " users from ", org)
 	for j := 0; j < len(users); j++ {
-		fmt.Println("----------------------------------------------------------------")
-		fmt.Println(*users[j].Login)
+		log.Debug(*users[j].Login)
 		getUserRepos(*users[j].Login, client)
 	}
 }
 
 func getOrgUsers(org string, client *github.Client) {
-	fmt.Println("Getting", org, " users:")
+	log.Debug("Getting", org, " users:")
 	opt := &github.ListMembersOptions{}
 	ctx := context.Background()
 	users, _, err := client.Organizations.ListMembers(ctx, org, opt)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("Handling", len(users), " users from ", org)
+	log.Debug("Handling", len(users), " users from ", org)
 	for j := 0; j < len(users); j++ {
 		visitGithubUser(*users[j])
 	}
@@ -104,7 +103,7 @@ func visitGithubUser(user github.User) {
 	}
 	b, err := json.MarshalIndent(m, "", " ")
 	if err != nil {
-		fmt.Println("error:", err)
+		log.Error("error:", err)
 	}
 	fmt.Print(string(b))
 	//	fmt.Println(*repo.Name, "\t\t\t", *repo.Private, "\t", *repo.UpdatedAt, "\t", *repo.CloneURL)
@@ -120,7 +119,7 @@ func visitRepo(repo github.Repository) {
 	}
 	b, err := json.MarshalIndent(m, "", " ")
 	if err != nil {
-		fmt.Println("error:", err)
+		log.Error("error:", err)
 	}
 	fmt.Print(string(b))
 	//	fmt.Println(*repo.Name, "\t\t\t", *repo.Private, "\t", *repo.UpdatedAt, "\t", *repo.CloneURL)
@@ -143,7 +142,7 @@ func init() {
 
 func getGithubClient(token string) *github.Client {
 	if token == "" {
-		fmt.Println("Warning: empty token so searching public.")
+		log.Info("Warning: empty token so searching public.")
 		githubClient := github.NewClient(nil)
 		return githubClient
 	}

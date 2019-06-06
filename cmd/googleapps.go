@@ -1,5 +1,5 @@
-// Copyright © 2019 Matt Konda <mkonda@jemurai.com>
-//
+// Package cmd
+
 package cmd
 
 import (
@@ -7,9 +7,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
 

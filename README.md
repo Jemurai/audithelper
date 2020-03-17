@@ -6,8 +6,7 @@ Basically, make it quick and easy to get information to support audits.
 
 You can build gaa just by cloning, installing dependencies and running `go build`.  If you want to just run from source, you can just clone then run `go run main.go <platform>` which is fine for some folks.
 
-If you want to get a prebuilt release version, you can get it from here for your platform.
-https://github.com/Jemurai/gaa/releases
+If you want to get a prebuilt release version, you can get it from [here](https://github.com/Jemurai/gaa/releases) for your platform.
 
 ## Running
 
@@ -17,14 +16,15 @@ need to set up access.  The following sections show how to set up access and run
 ## GitHub
 
 ### Access
-To get a GitHub OAuth token, use these instructions:
-https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line
+
+To get a GitHub OAuth token, use [these instructions](
+https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line)
 
 Once you have a token, you can put it in a .gaa.yaml file in your home directory.  _Note that the github token should be treated as a secret and handled accordingly._
 
 In other words, your ~/.gaa.yaml file might look like this:
 
-```
+```sh
 github-token: b4a9b....
 github-org: Jemurai
 ```
@@ -33,7 +33,7 @@ github-org: Jemurai
 
 `gaa github --github-org Jemurai`
 
-### What you get?
+### What you get
 
 You get a list of repositories with metadata for any user associated with your organization.  The _use case_ is that you want to ensure that the repos your team has, and that are public, are as intended.
 
@@ -49,14 +49,13 @@ Based on a combination of aws-vault and ~/.aws/config profiles, when we run with
 
 Generally, we are reading out of the AWS account so you'll want to run with ReadOnly or SecurityAudit privileges.
 
-See this documentation on how to set up STS assume role:  
-https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-role.html
+See [this documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-role.html) on how to set up STS assume role.
 
 ### Command
 
 `aws-vault exec jemurai-mkonda -- gaa aws`
 
-### What you get?
+### What you get
 
 What gaa does with AWS is:
 
@@ -81,3 +80,27 @@ _TODO THIS IS NOT EVEN STARTED_
 https://github.com/mhoc/msgoraph
 https://github.com/Azure/azure-sdk-for-go
 
+## Google Drive and File Sharing
+
+Background:
+
+- https://developers.google.com/admin-sdk/reports/v1/quickstart/go
+- https://developers.google.com/drive/api/v3/enable-drive-api
+- https://developers.google.com/admin-sdk/reports/v1/guides/prerequisites
+- https://developers.google.com/drive/api/v3/about-changelogs
+
+To set up google file sharing auditing, you will need to enable the Admin SDK and provide an OAuth scope for reading admin reports (`admin.AdminReportsAuditReadonlyScope`).  We also have the tool set up to ask for Drive metadata read because we anticipate wanting that information available as well (`drive.DriveMetadataReadonlyScope`).
+
+You will need to download the credentials.json and name `drivecredentials.json` in a directory local to `gaa`.  Then you can run:
+
+```sh
+go run main.go googledrive
+```
+
+You should be prompted to click through the OAuth flow in a web browser and capture a token, which will then be written to a drivetoken.json file.  Once you're done that, you will be able to see the files changed, by whom, when and who was granted access.
+
+Something like this:  
+
+```text
+24 Feb 20 20:12 UTC: email2@jemurai.com File: "Status Update 2.24.20" shared_internally With: email1@jemurai.com 218.171.219.84
+```

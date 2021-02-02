@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/jemurai/gaa/cmd"
+import "github.com/jemurai/audithelper/cmd"
 
 func main() {
 	cmd.Execute()

@@ -1,4 +1,4 @@
-// Copyright © 2019 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2019-2021 Matt Konda mkonda@jemurai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,15 +20,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var versionString = "0.1.0"
+var versionString = "0.2.0"
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Displays the version of gaa",
-	Long:  `Displays the version of gaa`,
+	Short: "Displays the version of audithelper",
+	Long:  `Displays the version of audithelper`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("GAA Version", versionString)
+		fmt.Println("AuditHelper Version", versionString)
 	},
 }
 

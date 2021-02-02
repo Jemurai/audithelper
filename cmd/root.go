@@ -1,4 +1,4 @@
-// Copyright © 2019 Matt Konda <mkonda@jemurai.com>
+// Copyright © 2019-2021 Matt Konda <mkonda@jemurai.com>
 //
 
 package cmd
@@ -18,9 +18,9 @@ var debug bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "gaa",
-	Short: "gaa is short for go away auditor.",
-	Long: `gaa helps to gather information to support different 
+	Use:   "audithelper",
+	Short: "audithelper helps collect information for audits",
+	Long: `audithelper helps to gather information to support different 
 	types of audits. `,
 }
 
@@ -35,7 +35,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gaa.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.audithelper.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "debug mode")
 }
 
@@ -58,9 +58,9 @@ func initConfig() {
 			os.Exit(1)
 		}
 
-		// Search config in home directory with name ".gaa" (without extension).
+		// Search config in home directory with name ".audithelper" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".gaa")
+		viper.SetConfigName(".audithelper")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

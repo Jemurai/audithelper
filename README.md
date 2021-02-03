@@ -2,7 +2,7 @@
 
 Basically, make it quick and easy to get information to support audits.
 
-## Getting GAA
+## Getting AuditHelper
 
 You can build audithelper just by cloning, installing dependencies and running `go build`.  If you want to just run from source, you can just clone then run `go run main.go <platform>` which is fine for some folks.
 
@@ -10,7 +10,7 @@ If you want to get a prebuilt release version, you can get it from [here](https:
 
 ## Running
 
-You can use gaa to audit github, aws or google apps.  To do so, you
+You can use audithelper to audit github, aws or google apps.  To do so, you
 need to set up access.  The following sections show how to set up access and run for each different platform.  In principle, it is just `audithelper <platform>`.
 
 ## GitHub
@@ -67,9 +67,9 @@ What audithelper does with AWS is:
 
 Based on [these instructions](https://developers.google.com/admin-sdk/directory/v1/quickstart/go) we need to:
 
-1. Create client credentials:  click on enable Directory API, then Download Client Configuration and place that in a file (credentials.json) in the directory you plan to run gaa from.
+1. Create client credentials:  click on enable Directory API, then Download Client Configuration and place that in a file (credentials.json) in the directory you plan to run audithelper from.
 
-2. When initially running gaa, a browser window will launch.  Click through the web prompt to allow google to issue you an OAuth2 token.
+2. When initially running audithelper, a browser window will launch.  Click through the web prompt to allow google to issue you an OAuth2 token.
 
 _Note that the credentials.json file should be treated as a secret and handled accordingly._
 

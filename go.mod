@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-sdk-go v1.37.2
 	github.com/google/go-github v17.0.0+incompatible
 	github.com/google/go-querystring v1.0.0 // indirect
-	github.com/jemurai/gaa v0.1.1
+	github.com/jemurai/audithelper v0.1.1 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/cobra v1.1.1

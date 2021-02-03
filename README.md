@@ -1,17 +1,17 @@
-# GAA = Go Away Auditor
+# Audit Helper
 
 Basically, make it quick and easy to get information to support audits.
 
 ## Getting GAA
 
-You can build gaa just by cloning, installing dependencies and running `go build`.  If you want to just run from source, you can just clone then run `go run main.go <platform>` which is fine for some folks.
+You can build audithelper just by cloning, installing dependencies and running `go build`.  If you want to just run from source, you can just clone then run `go run main.go <platform>` which is fine for some folks.
 
-If you want to get a prebuilt release version, you can get it from [here](https://github.com/Jemurai/gaa/releases) for your platform.
+If you want to get a prebuilt release version, you can get it from [here](https://github.com/Jemurai/audithelper/releases) for your platform.
 
 ## Running
 
 You can use gaa to audit github, aws or google apps.  To do so, you
-need to set up access.  The following sections show how to set up access and run for each different platform.  In principle, it is just `gaa <platform>`.
+need to set up access.  The following sections show how to set up access and run for each different platform.  In principle, it is just `audithelper <platform>`.
 
 ## GitHub
 
@@ -20,9 +20,9 @@ need to set up access.  The following sections show how to set up access and run
 To get a GitHub OAuth token, use [these instructions](
 https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line)
 
-Once you have a token, you can put it in a .gaa.yaml file in your home directory.  _Note that the github token should be treated as a secret and handled accordingly._
+Once you have a token, you can put it in a .audithelper.yaml file in your home directory.  _Note that the github token should be treated as a secret and handled accordingly._
 
-In other words, your ~/.gaa.yaml file might look like this:
+In other words, your ~/.audithelper.yaml file might look like this:
 
 ```sh
 github-token: b4a9b....
@@ -31,7 +31,7 @@ github-org: Jemurai
 
 ### Command
 
-`gaa github --github-org Jemurai`
+`audithelper github --github-org Jemurai`
 
 ### What you get
 
@@ -53,11 +53,11 @@ See [this documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-co
 
 ### Command
 
-`aws-vault exec jemurai-mkonda -- gaa aws`
+`aws-vault exec jemurai-mkonda -- audithelper aws`
 
 ### What you get
 
-What gaa does with AWS is:
+What audithelper does with AWS is:
 
 1. List users and basic information to be able to see change over time.
 
@@ -91,10 +91,10 @@ Background:
 
 To set up google file sharing auditing, you will need to enable the Admin SDK and provide an OAuth scope for reading admin reports (`admin.AdminReportsAuditReadonlyScope`).  We also have the tool set up to ask for Drive metadata read because we anticipate wanting that information available as well (`drive.DriveMetadataReadonlyScope`).
 
-You will need to download the credentials.json and name `drivecredentials.json` in a directory local to `gaa`.  Then you can run:
+You will need to download the credentials.json and name `drivecredentials.json` in a directory local to `audithelper`.  Then you can run:
 
 ```sh
-go run main.go googledrive
+go run audithelper.go googledrive
 ```
 
 You should be prompted to click through the OAuth flow in a web browser and capture a token, which will then be written to a drivetoken.json file.  Once you're done that, you will be able to see the files changed, by whom, when and who was granted access.

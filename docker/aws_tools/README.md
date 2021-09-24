@@ -61,7 +61,16 @@ run_cloudsplaining.sh
 
 ### Running Prowler
 
+A helper has been provided to run prowler with typical options. This tells
+prowler to create html, csv, and json versions of the findings as well as
+outputting progress to the `/dev/stderr` so you can see the checks as they
+are performed. The reports are saved to `/work/prowler`. Any additional
+command-line options passed to this helper script are also passed to Prowler.
 
+```sh
+## Run the default prowler command: prowler -M text,html,csv,json -o /work/prowler
+run_prowler.sh
+```
 
 ## Cleaning up
 

@@ -1,7 +1,8 @@
 # AWS Tools Container
 
 This directory aims to build a docker container with all the standard AWS
-tools I use for AWS assessments. Here is a rundown of which tools are included.
+tools I use for AWS assessments. Here is a rundown of which tools are included
+and are already installed.
 
 1. [ScoutSuite](https://github.com/nccgroup/ScoutSuite): Excellent overall
    configuration evaluation tool which is the basis of the [JASP](https://jasp.cloud)
@@ -37,6 +38,32 @@ aws-vault exec SuperAwesomeAuditProfile -- docker-compose run --rm tools
 This will drop you at a command-line in the container with your AWS credentials
 available, all tools on the PATH, and a volume mapping from `/work` in the
 container to a `work` subdirectory where you launched the container.
+
+### Running ScoutSuite
+
+The following command runs ScoutSuite against AWS for all regions (and
+suppresses the attempt to launch a browser when completed). By default, the
+report is saved to `/work/scoutsuite-report`.
+
+```sh
+scout aws --no-browser
+```
+
+### Running Cloudsplaining
+
+A utility script has been included to download and scan the IAM configuration
+using Cloudsplaining. It creates a report in html, json, and csv located in
+the `/work/cloudsplaining` directory.
+
+```sh
+run_cloudsplaining.sh
+```
+
+### Running Prowler
+
+
+
+## Cleaning up
 
 Run all the tools you need to run and exit the shell when finished. Docker will
 automatically shutdown and destroy the container. When you are completely
